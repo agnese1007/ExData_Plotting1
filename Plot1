@@ -1,21 +1,11 @@
 # Load and filter household power consumption dataset
-load.data <- function(filepath) {
-  x <- read.table(filepath, sep=";", header=TRUE, na.strings="?")
-  x$datetime <- strptime(paste(x$Date, x$Time), "%d/%m/%Y %H:%M:%S")
-  dates <- c(as.Date("2007-02-01"), as.Date("2007-02-02"))
-  x[as.Date(x$datetime) %in% dates,]
-}
-
-# Red histogram of global active power with x-label and title,
-do.plot1 <- function(x) {
-  hist(x$Global_active_power, col="red",
-       main="Global Active Power",
-       xlab="Global Active Power (kilowatts)")
+x <- read.table("./household_power_consumption.txt", sep=";", header=TRUE, na.strings="?")
+x$datetime <- strptime(paste(x$Date, x$Time), "%d/%m/%Y %H:%M:%S")
+dates <- c(as.Date("2007-02-01"), as.Date("2007-02-02"))
+final <- x[as.Date(x$datetime) %in% dates,]
   
-}
-
-x <- load.data("./household_power_consumption.txt")
-
+# png of red histogram of global active power with x-label and title
 png("plot1.png", width=480, height=480, bg= "white")
-do.plot1(x)
+hist(final$Global_active_power, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
+
 dev.off()
